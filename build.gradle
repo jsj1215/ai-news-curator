@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.curator'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // RSS parsing
+    implementation 'com.rometools:rome:2.1.0'
+
+    // HTML parsing
+    implementation 'org.jsoup:jsoup:1.18.3'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    // H2 Database
+    runtimeOnly 'com.h2database:h2'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

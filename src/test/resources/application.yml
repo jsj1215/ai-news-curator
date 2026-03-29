@@ -1,0 +1,64 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: false
+
+gemini:
+  api-key: test-key
+  model: gemini-2.5-flash-lite
+  temperature: 0.3
+  daily-limit: 800
+  batch-size: 5
+  rpm-delay-ms: 0
+
+collector:
+  hacker-news:
+    api-url: https://hn.algolia.com/api/v1/search_by_date
+    query: "AI"
+    max-results: 5
+    max-age-hours: 4
+  reddit:
+    subreddits:
+      - r/artificial
+    max-age-hours: 4
+  tech-blogs:
+    max-age-hours: 168
+    sources: []
+
+filter:
+  keywords:
+    ai:
+      - AI
+      - LLM
+    backend:
+      - API
+      - Spring
+    exclude:
+      - hiring
+  max-age-hours: 48
+  min-title-length: 10
+
+evaluator:
+  score-weights:
+    practicality: 0.4
+    freshness: 0.3
+    depth: 0.3
+
+telegram:
+  bot-token: test-token
+  chat-id: test-chat-id
+
+pipeline:
+  schedule-cron: "0 0 */2 * * *"
+  top-count: 3
+
+jwt:
+  secret: testSecretKeyForTestingOnlyMustBeAtLeast256BitsLong12345678
+  access-token-expiry-ms: 1800000
+  refresh-token-expiry-ms: 604800000

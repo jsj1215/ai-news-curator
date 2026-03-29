@@ -1,0 +1,127 @@
+spring:
+  application:
+    name: ai-news-curator
+  datasource:
+    url: jdbc:h2:file:./data/ainews
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Gemini AI
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: gemini-2.5-flash-lite
+  temperature: 0.3
+  daily-limit: 800
+  batch-size: 5
+  rpm-delay-ms: 4000
+
+# Content Sources
+collector:
+  hacker-news:
+    api-url: https://hn.algolia.com/api/v1/search_by_date
+    query: "AI OR LLM OR GPT OR machine learning OR deep learning"
+    max-results: 30
+    max-age-hours: 4
+  reddit:
+    subreddits:
+      - r/artificial
+      - r/MachineLearning
+    max-age-hours: 4
+  tech-blogs:
+    max-age-hours: 168
+    sources:
+      - name: naver-d2
+        feed-url: https://d2.naver.com/d2.atom
+      - name: kakao
+        feed-url: https://tech.kakao.com/feed/
+      - name: coupang
+        feed-url: https://medium.com/feed/coupang-engineering
+      - name: woowahan
+        feed-url: https://techblog.woowahan.com/feed/
+      - name: line
+        feed-url: https://engineering.linecorp.com/ko/feed/
+      - name: daangn
+        feed-url: https://medium.com/feed/daangn
+
+# Filter
+filter:
+  keywords:
+    ai:
+      - AI
+      - LLM
+      - GPT
+      - transformer
+      - neural network
+      - deep learning
+      - machine learning
+      - RAG
+      - fine-tuning
+      - prompt engineering
+      - embedding
+      - vector database
+      - AI agent
+      - Spring AI
+      - LangChain
+      - 인공지능
+      - 대규모 언어모델
+      - 생성형 AI
+    backend:
+      - API
+      - 서버
+      - 인프라
+      - 배포
+      - 성능
+      - 아키텍처
+      - 마이크로서비스
+      - Spring
+      - Java
+      - Kotlin
+      - backend
+      - microservice
+      - kubernetes
+      - docker
+    exclude:
+      - job posting
+      - hiring
+      - 채용
+      - 연봉
+  max-age-hours: 48
+  min-title-length: 10
+
+# Evaluator
+evaluator:
+  score-weights:
+    practicality: 0.4
+    freshness: 0.3
+    depth: 0.3
+
+# Telegram
+telegram:
+  bot-token: ${TELEGRAM_BOT_TOKEN:}
+  chat-id: ${TELEGRAM_CHAT_ID:}
+
+# Pipeline
+pipeline:
+  schedule-cron: "0 0 */2 * * *"
+  top-count: 3
+
+# JWT
+jwt:
+  secret: ${JWT_SECRET:myDefaultSecretKeyForDevelopmentOnlyPleaseChangeInProduction2026}
+  access-token-expiry-ms: 1800000
+  refresh-token-expiry-ms: 604800000
+
+server:
+  port: 8080
