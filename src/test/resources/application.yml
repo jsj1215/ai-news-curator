@@ -29,7 +29,9 @@ collector:
     max-age-hours: 4
   tech-blogs:
     max-age-hours: 168
-    sources: []
+    sources:
+      - name: test-blog
+        feed-url: https://example.com/feed
 
 filter:
   keywords:
