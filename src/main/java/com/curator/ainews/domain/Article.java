@@ -31,7 +31,7 @@ public class Article {
     @Column(nullable = false)
     private String source;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime publishedAt;
@@ -44,7 +44,7 @@ public class Article {
     private Double depthScore;
     private Double totalScore;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     @Builder.Default

@@ -42,5 +42,19 @@ out/
 ### Data ###
 data/
 
-### Environment ###
+### Environment / Secrets ###
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+
+### Logs ###
+*.log
+
+### AI tooling (local session state) ###
+.omc/
+.claude/settings.local.json
+
+# AI 에이전트 지침 파일 (공개하지 않음)
+CLAUDE.md

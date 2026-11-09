@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header" class="site-header">
+    <div class="container header-inner">
+        <a href="/" class="logo">AI News Curator</a>
+        <nav class="nav">
+            <a th:classappend="${currentPage == 'home'} ? 'active'" href="/">Dashboard</a>
+            <a th:classappend="${currentPage == 'history'} ? 'active'" href="/history">History</a>
+            <a th:classappend="${currentPage == 'pipeline'} ? 'active'" href="/admin/pipeline">Pipeline</a>
+            <a th:classappend="${currentPage == 'stats'} ? 'active'" href="/admin/stats">Stats</a>
+        </nav>
+    </div>
+</header>
+</html>

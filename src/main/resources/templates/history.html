@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>History</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>Article History</h1>
+        <p class="subtitle" th:text="'Viewing: ' + ${selectedDate}"></p>
+    </div>
+
+    <!-- Date Picker -->
+    <form method="get" action="/history" class="date-picker">
+        <label for="date">Pick a date:</label>
+        <input type="date" id="date" name="date"
+               th:value="${selectedDate}"
+               onchange="this.form.submit()"/>
+    </form>
+
+    <!-- Date Navigation (dates with sent articles) -->
+    <div class="date-nav" th:if="${!availableDates.isEmpty()}">
+        <a th:each="d : ${availableDates}"
+           th:href="@{/history(date=${d})}"
+           th:text="${d}"
+           th:classappend="${d.toString() == selectedDate.toString()} ? 'active'"></a>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${articles.isEmpty()}" class="empty-state">
+        <div class="icon">&#128197;</div>
+        <p>No articles sent on this date.</p>
+    </div>
+
+    <!-- Article List -->
+    <div th:each="article : ${articles}" class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">
+                    <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                </div>
+                <div class="card-meta">
+                    <span class="source-tag" th:text="${article.source}"></span>
+                    <span th:if="${article.sentAt != null}"
+                          th:text="${#temporals.format(article.sentAt, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+            </div>
+            <span th:if="${article.totalScore != null}"
+                  class="score-badge"
+                  th:classappend="${article.totalScore >= 7} ? 'score-high' : (${article.totalScore >= 4} ? 'score-mid' : 'score-low')"
+                  th:text="${#numbers.formatDecimal(article.totalScore, 1, 1)}"></span>
+        </div>
+        <div th:if="${article.summary != null}" class="card-summary" th:text="${article.summary}"></div>
+    </div>
+</div>
+</body>
+</html>

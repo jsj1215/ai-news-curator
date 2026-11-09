@@ -1,6 +1,9 @@
 spring:
   application:
     name: ai-news-curator
+  # 로컬 .env(gitignore 대상)를 프로퍼티로 읽어 ${GEMINI_API_KEY} 등을 주입
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url: jdbc:h2:file:./data/ainews
     driver-class-name: org.h2.Driver
@@ -117,11 +120,23 @@ pipeline:
   schedule-cron: "0 0 */2 * * *"
   top-count: 3
 
+# Admin (/admin/**, /api/pipeline/**, /h2-console) — HTTP Basic
+# ADMIN_PASSWORD 미설정 시 기동할 때마다 임시 비밀번호를 생성해 로그에 출력함
+admin:
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD:}
+
 # JWT
 jwt:
   secret: ${JWT_SECRET:myDefaultSecretKeyForDevelopmentOnlyPleaseChangeInProduction2026}
   access-token-expiry-ms: 1800000
   refresh-token-expiry-ms: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
 
 server:
   port: 8080

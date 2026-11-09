@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Pipeline Management</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>Pipeline Management</h1>
+        <p class="subtitle">Manually run the news pipeline or check status</p>
+    </div>
+
+    <!-- Status & Run -->
+    <div class="card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div>
+            <div style="font-weight:600; margin-bottom:8px;">Pipeline Status</div>
+            <div id="pipeline-status">
+                <span th:if="${isRunning}" class="status-indicator status-running">
+                    <span class="pulse pulse-running"></span> Running
+                </span>
+                <span th:unless="${isRunning}" class="status-indicator status-idle">
+                    <span class="pulse pulse-idle"></span> Idle
+                </span>
+            </div>
+        </div>
+        <button id="run-pipeline-btn" class="btn btn-primary" onclick="runPipeline()"
+                th:disabled="${isRunning}">
+            Run Pipeline
+        </button>
+    </div>
+
+    <!-- Result placeholder -->
+    <div id="pipeline-result"></div>
+
+    <!-- Recent Articles -->
+    <h3 class="section-title" style="margin-top:32px;">Recently Collected Articles</h3>
+
+    <div th:if="${recentArticles.isEmpty()}" class="empty-state">
+        <div class="icon">&#128196;</div>
+        <p>No articles collected yet.</p>
+    </div>
+
+    <div class="card" th:unless="${recentArticles.isEmpty()}" style="padding:0; overflow-x:auto;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Source</th>
+                    <th>Score</th>
+                    <th>Sent</th>
+                    <th>Collected</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="article : ${recentArticles}">
+                    <td>
+                        <a th:href="@{/articles/{id}(id=${article.id})}"
+                           th:text="${#strings.abbreviate(article.title, 60)}"></a>
+                    </td>
+                    <td><span class="source-tag" th:text="${article.source}"></span></td>
+                    <td>
+                        <span th:if="${article.totalScore != null}"
+                              class="score-badge"
+                              th:classappend="${article.totalScore >= 7} ? 'score-high' : (${article.totalScore >= 4} ? 'score-mid' : 'score-low')"
+                              th:text="${#numbers.formatDecimal(article.totalScore, 1, 1)}"></span>
+                        <span th:unless="${article.totalScore != null}" style="color:var(--text-muted);">-</span>
+                    </td>
+                    <td>
+                        <span th:if="${article.sent}" style="color:var(--success);">Yes</span>
+                        <span th:unless="${article.sent}" style="color:var(--text-muted);">No</span>
+                    </td>
+                    <td th:text="${#temporals.format(article.collectedAt, 'MM-dd HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

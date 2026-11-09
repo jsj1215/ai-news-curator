@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${article.title}">Article Detail</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="article-detail">
+        <a href="javascript:history.back()" class="back-link">&larr; Back</a>
+
+        <h1 th:text="${article.title}"></h1>
+
+        <div class="card-meta" style="margin-bottom: 20px;">
+            <span class="source-tag" th:text="${article.source}"></span>
+            <span th:if="${article.publishedAt != null}"
+                  th:text="'Published: ' + ${#temporals.format(article.publishedAt, 'yyyy-MM-dd HH:mm')}"></span>
+            <span th:text="'Collected: ' + ${#temporals.format(article.collectedAt, 'yyyy-MM-dd HH:mm')}"></span>
+        </div>
+
+        <!-- Score Detail -->
+        <div th:if="${article.totalScore != null}" class="score-detail">
+            <div class="score-item">
+                <div class="label">Practicality</div>
+                <div class="value"
+                     th:classappend="${article.practicalityScore >= 7} ? 'score-high' : (${article.practicalityScore >= 4} ? 'score-mid' : 'score-low')"
+                     th:text="${article.practicalityScore != null} ? ${#numbers.formatDecimal(article.practicalityScore, 1, 1)} : 'N/A'"></div>
+                <div class="score-bar">
+                    <div class="score-bar-fill"
+                         th:style="'width:' + (${article.practicalityScore != null} ? ${article.practicalityScore * 10} : 0) + '%; background:' + (${article.practicalityScore >= 7} ? 'var(--score-high)' : (${article.practicalityScore >= 4} ? 'var(--score-mid)' : 'var(--score-low)'))"></div>
+                </div>
+            </div>
+            <div class="score-item">
+                <div class="label">Freshness</div>
+                <div class="value"
+                     th:classappend="${article.freshnessScore >= 7} ? 'score-high' : (${article.freshnessScore >= 4} ? 'score-mid' : 'score-low')"
+                     th:text="${article.freshnessScore != null} ? ${#numbers.formatDecimal(article.freshnessScore, 1, 1)} : 'N/A'"></div>
+                <div class="score-bar">
+                    <div class="score-bar-fill"
+                         th:style="'width:' + (${article.freshnessScore != null} ? ${article.freshnessScore * 10} : 0) + '%; background:' + (${article.freshnessScore >= 7} ? 'var(--score-high)' : (${article.freshnessScore >= 4} ? 'var(--score-mid)' : 'var(--score-low)'))"></div>
+                </div>
+            </div>
+            <div class="score-item">
+                <div class="label">Depth</div>
+                <div class="value"
+                     th:classappend="${article.depthScore >= 7} ? 'score-high' : (${article.depthScore >= 4} ? 'score-mid' : 'score-low')"
+                     th:text="${article.depthScore != null} ? ${#numbers.formatDecimal(article.depthScore, 1, 1)} : 'N/A'"></div>
+                <div class="score-bar">
+                    <div class="score-bar-fill"
+                         th:style="'width:' + (${article.depthScore != null} ? ${article.depthScore * 10} : 0) + '%; background:' + (${article.depthScore >= 7} ? 'var(--score-high)' : (${article.depthScore >= 4} ? 'var(--score-mid)' : 'var(--score-low)'))"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Score -->
+        <div th:if="${article.totalScore != null}" class="card" style="text-align:center;">
+            <div class="label" style="color:var(--text-muted); font-size:0.85rem;">TOTAL SCORE</div>
+            <div style="font-size:2.5rem; font-weight:700; margin-top:4px;"
+                 th:classappend="${article.totalScore >= 7} ? 'score-high' : (${article.totalScore >= 4} ? 'score-mid' : 'score-low')"
+                 th:text="${#numbers.formatDecimal(article.totalScore, 1, 1)}"></div>
+        </div>
+
+        <!-- Summary -->
+        <div th:if="${article.summary != null}" style="margin-top: 24px;">
+            <h3 class="section-title">AI Summary</h3>
+            <div class="card">
+                <p th:text="${article.summary}" style="line-height:1.8;"></p>
+            </div>
+        </div>
+
+        <!-- Original Link -->
+        <a th:href="${article.url}" target="_blank" rel="noopener" class="original-link">
+            View Original Article &rarr;
+        </a>
+    </div>
+</div>
+</body>
+</html>
