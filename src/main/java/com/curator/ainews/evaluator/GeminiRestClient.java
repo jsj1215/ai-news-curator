@@ -51,9 +51,10 @@ public class GeminiRestClient implements GeminiClient {
 
         waitForRateLimit();
 
+        // API 키는 URL 쿼리 대신 헤더로 전달한다. URL에 키가 있으면 예외 메시지와 접근 로그에 그대로 남는다.
         String url = String.format(
-            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s",
-            model, apiKey
+            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent",
+            model
         );
 
         Map<String, Object> requestBody = Map.of(
@@ -68,6 +69,7 @@ public class GeminiRestClient implements GeminiClient {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-goog-api-key", apiKey);
 
         try {
             ResponseEntity<Map> response = restTemplate.exchange(

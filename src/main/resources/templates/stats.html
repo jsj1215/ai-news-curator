@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Statistics</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>Statistics</h1>
+        <p class="subtitle">Overview of collection, scoring, and API usage</p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" th:text="${totalArticles}">0</div>
+            <div class="stat-label">Total Articles</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${sentArticles}">0</div>
+            <div class="stat-label">Sent via Telegram</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${avgScore}">N/A</div>
+            <div class="stat-label">Avg Score</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${todayCollected}">0</div>
+            <div class="stat-label">Collected Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${geminiCallsToday}">0</div>
+            <div class="stat-label">Gemini API Calls Today</div>
+        </div>
+    </div>
+
+    <!-- Source Stats -->
+    <h3 class="section-title">Articles by Source</h3>
+    <div class="card" th:unless="${sourceStats.isEmpty()}" style="padding:0; overflow-x:auto;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Count</th>
+                    <th>Avg Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="stat : ${sourceStats}">
+                    <td><span class="source-tag" th:text="${stat[0]}"></span></td>
+                    <td th:text="${stat[1]}"></td>
+                    <td>
+                        <span th:each="avg : ${sourceAvgScores}"
+                              th:if="${avg[0] == stat[0]}"
+                              th:text="${avg[1] != null} ? ${#numbers.formatDecimal(avg[1], 1, 1)} : '-'"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${sourceStats.isEmpty()}" class="empty-state">
+        <div class="icon">&#128202;</div>
+        <p>No data available yet. Run the pipeline to start collecting articles.</p>
+    </div>
+</div>
+</body>
+</html>

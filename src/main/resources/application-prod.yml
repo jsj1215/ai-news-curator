@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ainews}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:ainews}
+    password: ${DB_PASSWORD:ainews}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  h2:
+    console:
+      enabled: false
+
+# 운영에서는 시크릿 기본값을 쓰지 않는다.
+# JWT_SECRET이 비면 키 생성 단계에서, ADMIN_PASSWORD가 비면 SecurityConfig에서 기동이 실패함
+jwt:
+  secret: ${JWT_SECRET}
+
+admin:
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD}
+
+logging:
+  level:
+    root: INFO
+    com.curator.ainews: INFO
+    org.hibernate.SQL: WARN
+  file:
+    name: /app/data/ainews.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized

@@ -42,7 +42,7 @@ public class RuleBasedFilter {
                 boolean hasAi = containsAny(text, aiKeywords);
                 boolean hasBackend = containsAny(text, backendKeywords);
                 boolean isKoreanBlog = KOREAN_BLOG_SOURCES.contains(a.getSource());
-                return (hasAi && hasBackend) || (isKoreanBlog && hasAi);
+                return hasAi || hasBackend || isKoreanBlog;
             })
             .collect(Collectors.toList());
 

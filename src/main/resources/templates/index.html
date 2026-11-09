@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>Today's Curated Articles</h1>
+        <p class="subtitle" th:text="'Date: ' + ${today}"></p>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${todayArticles.isEmpty()}" class="empty-state">
+        <div class="icon">&#128240;</div>
+        <p>No articles curated today yet.</p>
+        <p style="margin-top: 8px;">
+            <a href="/admin/pipeline">Run the pipeline</a> to collect articles.
+        </p>
+    </div>
+
+    <!-- Grouped by Hour -->
+    <div th:each="entry : ${groupedByHour}" class="hour-group">
+        <div class="hour-label" th:text="${entry.key + ':00 Batch'}"></div>
+        <div th:each="article : ${entry.value}" class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">
+                        <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                    </div>
+                    <div class="card-meta">
+                        <span class="source-tag" th:text="${article.source}"></span>
+                        <span th:if="${article.sentAt != null}"
+                              th:text="'Sent ' + ${#temporals.format(article.sentAt, 'HH:mm')}"></span>
+                    </div>
+                </div>
+                <span th:if="${article.totalScore != null}"
+                      class="score-badge"
+                      th:classappend="${article.totalScore >= 7} ? 'score-high' : (${article.totalScore >= 4} ? 'score-mid' : 'score-low')"
+                      th:text="${#numbers.formatDecimal(article.totalScore, 1, 1)}"></span>
+            </div>
+            <div th:if="${article.summary != null}" class="card-summary" th:text="${article.summary}"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

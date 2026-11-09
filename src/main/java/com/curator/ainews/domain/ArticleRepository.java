@@ -25,4 +25,22 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<java.sql.Date> findDistinctSentDates();
 
     long countByCreatedAtAfter(LocalDateTime after);
+
+    long countBySentTrue();
+
+    long countBySource(String source);
+
+    @Query("SELECT a.source, COUNT(a) FROM Article a GROUP BY a.source ORDER BY COUNT(a) DESC")
+    List<Object[]> countBySourceGrouped();
+
+    @Query("SELECT AVG(a.totalScore) FROM Article a WHERE a.totalScore IS NOT NULL")
+    Double findAverageTotalScore();
+
+    @Query("SELECT a.source, AVG(a.totalScore) FROM Article a WHERE a.totalScore IS NOT NULL GROUP BY a.source")
+    List<Object[]> findAverageScoreBySource();
+
+    List<Article> findTop10ByOrderByCreatedAtDesc();
+
+    @Query("SELECT a FROM Article a WHERE a.sent = true ORDER BY a.sentAt DESC, a.totalScore DESC")
+    List<Article> findAllSentArticlesOrderBySentAtDesc();
 }

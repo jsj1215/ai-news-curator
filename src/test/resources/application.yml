@@ -60,6 +60,10 @@ pipeline:
   schedule-cron: "0 0 */2 * * *"
   top-count: 3
 
+admin:
+  username: admin
+  password: test-admin-password
+
 jwt:
   secret: testSecretKeyForTestingOnlyMustBeAtLeast256BitsLong12345678
   access-token-expiry-ms: 1800000
